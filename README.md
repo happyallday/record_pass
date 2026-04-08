@@ -1,6 +1,6 @@
 # 密码管理器
 
-一个安全可靠的Windows桌面密码管理应用程序，使用WPF和.NET 6开发。
+一个安全可靠的Windows桌面密码管理应用程序，使用WPF和.NET 8开发。
 
 ## 功能特性
 
@@ -32,14 +32,14 @@
 ## 系统要求
 
 - **操作系统**：Windows 10/11
-- **.NET运行时**：.NET 6.0 或更高版本
+- **.NET运行时**：.NET 8.0 或更高版本
 - **磁盘空间**：约50MB（包括运行时）
 
 ## 安装和使用
 
 ### 1. 安装.NET运行时
-如果没有安装.NET 6.0，请从以下地址下载安装：
-https://dotnet.microsoft.com/download/dotnet/6.0
+如果没有安装.NET 8.0，请从以下地址下载安装：
+https://dotnet.microsoft.com/download/dotnet/8.0
 
 ### 2. 编译程序
 在项目根目录运行：
@@ -130,9 +130,15 @@ dotnet run --project PasswordManager/PasswordManager.csproj
 ## 故障排除
 
 ### 无法启动程序
-1. 检查.NET 6.0是否正确安装
+1. 检查.NET 8.0是否正确安装
 2. 检查是否有足够的权限访问AppData目录
 3. 查看Windows事件查看器中的错误信息
+
+### 编译问题
+如果遇到编译错误，请确保：
+1. 使用.NET 8.0 SDK或更新版本
+2. 运行 `dotnet restore` 恢复NuGet包
+3. 确保所有依赖包已正确安装
 
 ### 密码解密失败
 1. 确认主密码是否正确
@@ -147,7 +153,7 @@ dotnet run --project PasswordManager/PasswordManager.csproj
 ## 开发信息
 
 ### 技术栈
-- **框架**：.NET 6.0 WPF
+- **框架**：.NET 8.0 WPF
 - **数据库**：SQLite (Microsoft.Data.Sqlite)
 - **加密**：AES-256 + Windows DPAPI
 - **UI**：XAML
@@ -174,6 +180,8 @@ PasswordManager/
 - 基本的密码管理功能
 - 密码生成器和提醒系统
 - 数据备份和恢复功能
+- 修复SQLite命名空间引用错误
+- 升级到.NET 8.0框架
 
 ## 贡献
 
