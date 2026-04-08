@@ -69,7 +69,7 @@ namespace PasswordManager.Utils
             if (options.IncludeSpecialChars && !result.ToString().Any(SpecialChars.Contains))
             {
                 int pos = GetRandomPosition(random, options.Length);
-                result[pos] = SpecialChars[random.Next(SpecialChars.Length.Length)];
+                result[pos] = SpecialChars[random.Next(SpecialChars.Length)];
             }
 
             return result.ToString();

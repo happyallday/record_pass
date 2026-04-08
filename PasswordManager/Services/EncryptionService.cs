@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace PasswordManager.Services
 {
@@ -11,7 +12,7 @@ namespace PasswordManager.Services
         [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool CryptProtectData(
             ref DATA_BLOB pDataIn,
-            string szDataDescr,
+            StringBuilder szDataDescr,
             ref DATA_BLOB pOptionalEntropy,
             IntPtr pvReserved,
             IntPtr pPromptStruct,
@@ -134,7 +135,7 @@ namespace PasswordManager.Services
 
             var blobOut = new DATA_BLOB();
 
-            if (!CryptProtectData(ref blobIn, null, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
+            if (!CryptProtectData(ref blobIn, null!, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
             {
                 Marshal.FreeHGlobal(blobIn.pbData);
                 throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
@@ -160,7 +161,7 @@ namespace PasswordManager.Services
 
             var blobOut = new DATA_BLOB();
 
-            if (!CryptUnprotectData(ref blobIn, null, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
+            if (!CryptUnprotectData(ref blobIn, null!, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
             {
                 Marshal.FreeHGlobal(blobIn.pbData);
                 throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());

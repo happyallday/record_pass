@@ -1,5 +1,6 @@
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using PasswordManager.Models;
 using PasswordManager.Utils;
 
@@ -118,8 +119,8 @@ namespace PasswordManager.Views
                     VerticalContentAlignment = System.Windows.VerticalAlignment.Center
                 };
 
-                var columnIndex = Grid.GetColumn(PasswordTextBox);
-                Grid.SetColumn(_plainPasswordTextBox, columnIndex);
+                var columnIndex = System.Windows.Controls.Grid.GetColumn(PasswordTextBox);
+                System.Windows.Controls.Grid.SetColumn(_plainPasswordTextBox, columnIndex);
                 parentGrid.Children.Remove(PasswordTextBox);
                 parentGrid.Children.Add(_plainPasswordTextBox);
 
@@ -131,8 +132,8 @@ namespace PasswordManager.Views
                 if (_plainPasswordTextBox != null)
                 {
                     PasswordTextBox.Password = _plainPasswordTextBox.Text;
-                    var columnIndex = Grid.GetColumn(_plainPasswordTextBox);
-                    Grid.SetColumn(PasswordTextBox, columnIndex);
+                    var columnIndex = System.Windows.Controls.Grid.GetColumn(_plainPasswordTextBox);
+                    System.Windows.Controls.Grid.SetColumn(PasswordTextBox, columnIndex);
                     parentGrid.Children.Remove(_plainPasswordTextBox);
                     parentGrid.Children.Add(PasswordTextBox);
                 }

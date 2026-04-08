@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
 using PasswordManager.Models;
 using PasswordManager.Services;
 using PasswordManager.Utils;
