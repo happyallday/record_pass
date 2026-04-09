@@ -70,8 +70,8 @@ namespace PasswordManager.Services
             command.CommandText = @"
                 INSERT INTO Passwords 
                 (Website, Username, Password, Description, CreatedAt, UpdatedAt, ReminderDays, LastReminderSent)
-                VALUES (@Website, @Username, @Password, @Description, @CreatedAt, @UpdatedAt, @ReminderDays, @LastReminderSent)
-                RETURNING Id;
+                VALUES (@Website, @Username, @Password, @Description, @CreatedAt, @UpdatedAt, @ReminderDays, @LastReminderSent);
+                SELECT last_insert_rowid();
             ";
 
             command.Parameters.AddWithValue("@Website", entry.Website);
@@ -84,7 +84,7 @@ namespace PasswordManager.Services
             command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? default(string) : entry.LastReminderSent.ToString("o"));
 
             var result = command.ExecuteScalar();
-            return Convert.ToInt32(result);
+            return Convert.ToInt64(result);
         }
 
         public bool UpdatePasswordEntry(PasswordEntry entry)
