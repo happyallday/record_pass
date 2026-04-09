@@ -63,28 +63,43 @@ namespace PasswordManager.Services
 
         public int AddPasswordEntry(PasswordEntry entry)
         {
-            using var connection = CreateConnection();
-            connection.Open();
+            try
+            {
+                using var connection = CreateConnection();
+                connection.Open();
 
-            var command = connection.CreateCommand();
-            command.CommandText = @"
-                INSERT INTO Passwords 
-                (Website, Username, Password, Description, CreatedAt, UpdatedAt, ReminderDays, LastReminderSent)
-                VALUES (@Website, @Username, @Password, @Description, @CreatedAt, @UpdatedAt, @ReminderDays, @LastReminderSent);
-                SELECT last_insert_rowid();
-            ";
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    INSERT INTO Passwords 
+                    (Website, Username, Password, Description, CreatedAt, UpdatedAt, ReminderDays, LastReminderSent)
+                    VALUES (@Website, @Username, @Password, @Description, @CreatedAt, @UpdatedAt, @ReminderDays, @LastReminderSent);
+                    SELECT last_insert_rowid();
+                ";
 
-            command.Parameters.AddWithValue("@Website", entry.Website);
-            command.Parameters.AddWithValue("@Username", entry.Username);
-            command.Parameters.AddWithValue("@Password", entry.Password);
-            command.Parameters.AddWithValue("@Description", entry.Description);
-            command.Parameters.AddWithValue("@CreatedAt", entry.CreatedAt.ToString("o"));
-            command.Parameters.AddWithValue("@UpdatedAt", entry.UpdatedAt.ToString("o"));
-            command.Parameters.AddWithValue("@ReminderDays", entry.ReminderDays);
-            command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? default(string) : entry.LastReminderSent.ToString("o"));
+                // Validate and prepare parameters
+                var lastReminderSent = entry.LastReminderSent == DateTime.MinValue ? null : entry.LastReminderSent.ToString("o");
+                
+                command.Parameters.AddWithValue("@Website", entry.Website ?? "");
+                command.Parameters.AddWithValue("@Username", entry.Username ?? "");
+                command.Parameters.AddWithValue("@Password", entry.Password ?? "");
+                command.Parameters.AddWithValue("@Description", entry.Description ?? "");
+                command.Parameters.AddWithValue("@CreatedAt", entry.CreatedAt.ToString("o"));
+                command.Parameters.AddWithValue("@UpdatedAt", entry.UpdatedAt.ToString("o"));
+                command.Parameters.AddWithValue("@ReminderDays", entry.ReminderDays);
+                command.Parameters.AddWithValue("@LastReminderSent", 
+                    lastReminderSent == null ? DBNull.Value : lastReminderSent);
 
-            var result = command.ExecuteScalar();
-            return Convert.ToInt32(result);
+                var result = command.ExecuteScalar();
+                if (result == null || result == DBNull.Value)
+                {
+                    return -1;
+                }
+                return Convert.ToInt32(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"数据库添加密码失败: {ex.Message}", ex);
+            }
         }
 
         public bool UpdatePasswordEntry(PasswordEntry entry)

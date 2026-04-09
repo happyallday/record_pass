@@ -46,27 +46,41 @@ namespace PasswordManager.Views
             var dialog = new PasswordEntryDialog();
             if (dialog.ShowDialog() == true && dialog.PasswordEntry != null)
             {
-                var entry = dialog.PasswordEntry;
-                entry.CreatedAt = DateTime.Now;
-                entry.UpdatedAt = DateTime.Now;
-
-                var encryptedPassword = App.EncryptionService.EncryptPassword(entry.Password, App.CurrentMasterPassword);
-                entry.Password = encryptedPassword;
-
                 try
                 {
-                    var id = App.DatabaseService?.AddPasswordEntry(entry) ?? 0;
+                    var entry = dialog.PasswordEntry;
+                    entry.CreatedAt = DateTime.Now;
+                    entry.UpdatedAt = DateTime.Now;
+
+                    UpdateStatus($"正在添加密码: {entry.Website}...");
+
+                    var encryptedPassword = App.EncryptionService.EncryptPassword(entry.Password, App.CurrentMasterPassword);
+                    entry.Password = encryptedPassword;
+
+                    if (App.DatabaseService == null)
+                    {
+                        MessageBox.Show("数据库服务未初始化", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var id = App.DatabaseService.AddPasswordEntry(entry);
                     if (id > 0)
                     {
                         entry.Id = id;
                         _allPasswords.Add(entry);
                         RefreshDataGrid();
                         UpdateStatus($"已添加密码: {entry.Website}");
+                        MessageBox.Show("密码添加成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("添加密码失败：返回的ID无效", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"添加密码失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"添加密码失败: {ex.Message}\n\n详细信息: {ex.StackTrace}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    UpdateStatus($"添加密码失败: {ex.Message}");
                 }
             }
         }
