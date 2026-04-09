@@ -135,7 +135,7 @@ namespace PasswordManager.Services
 
             var blobOut = new DATA_BLOB();
 
-            if (!CryptProtectData(ref blobIn, null, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
+            if (!CryptProtectData(ref blobIn, new StringBuilder(), ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
             {
                 Marshal.FreeHGlobal(blobIn.pbData);
                 throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
@@ -161,7 +161,7 @@ namespace PasswordManager.Services
 
             var blobOut = new DATA_BLOB();
 
-            if (!CryptUnprotectData(ref blobIn, null, ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
+            if (!CryptUnprotectData(ref blobIn, new StringBuilder(), ref blobOut, IntPtr.Zero, IntPtr.Zero, 0, ref blobOut))
             {
                 Marshal.FreeHGlobal(blobIn.pbData);
                 throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());

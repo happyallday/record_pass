@@ -84,7 +84,7 @@ namespace PasswordManager.Services
             command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? default(string) : entry.LastReminderSent.ToString("o"));
 
             var result = command.ExecuteScalar();
-            return Convert.ToInt64(result);
+            return Convert.ToInt32(result);
         }
 
         public bool UpdatePasswordEntry(PasswordEntry entry)
