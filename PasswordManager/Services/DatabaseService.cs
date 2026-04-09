@@ -81,7 +81,7 @@ namespace PasswordManager.Services
             command.Parameters.AddWithValue("@CreatedAt", entry.CreatedAt.ToString("o"));
             command.Parameters.AddWithValue("@UpdatedAt", entry.UpdatedAt.ToString("o"));
             command.Parameters.AddWithValue("@ReminderDays", entry.ReminderDays);
-            command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? (string)null : entry.LastReminderSent.ToString("o"));
+            command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? default(string) : entry.LastReminderSent.ToString("o"));
 
             var result = command.ExecuteScalar();
             return Convert.ToInt32(result);
@@ -112,7 +112,7 @@ namespace PasswordManager.Services
             command.Parameters.AddWithValue("@Description", entry.Description);
             command.Parameters.AddWithValue("@UpdatedAt", entry.UpdatedAt.ToString("o"));
             command.Parameters.AddWithValue("@ReminderDays", entry.ReminderDays);
-            command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? (string)null : entry.LastReminderSent.ToString("o"));
+            command.Parameters.AddWithValue("@LastReminderSent", entry.LastReminderSent == DateTime.MinValue ? default(string) : entry.LastReminderSent.ToString("o"));
 
             return command.ExecuteNonQuery() > 0;
         }

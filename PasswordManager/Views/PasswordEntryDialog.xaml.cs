@@ -108,7 +108,7 @@ namespace PasswordManager.Views
 
         private void TogglePassword_Click(object sender, RoutedEventArgs e)
         {
-            var parentGrid = PasswordTextBox.Parent as Grid;
+            var parentGrid = PasswordTextBox.Parent as System.Windows.Controls.Grid;
             if (parentGrid == null) return;
 
             if (!_isPasswordVisible)
@@ -252,7 +252,7 @@ namespace PasswordManager.Views
 
         private void QuickReminderSet_Click(object sender, RoutedEventArgs e)
         {
-            var menu = new System.Windows.Controls.ContextMenu();
+            var menu = new ContextMenu();
             
             var menuItems = new[]
             {
@@ -266,7 +266,7 @@ namespace PasswordManager.Views
 
             foreach (var item in menuItems)
             {
-                var menuItem = new System.Windows.Controls.MenuItem
+                var menuItem = new MenuItem
                 {
                     Header = item.Text
                 };
