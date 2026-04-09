@@ -29,11 +29,24 @@ namespace PasswordManager.Views
             PasswordTextBox.Password = _decryptedPassword;
 
             DescriptionText.Text = string.IsNullOrWhiteSpace(_entry.Description) 
-                ? "无描述信息" 
+                ? "暂无描述信息" 
                 : _entry.Description;
 
-            DatesText.Text = $"创建时间: {_entry.CreatedAt:yyyy-MM-dd HH:mm}\n" +
-                           $"最后更新: {_entry.UpdatedAt:yyyy-MM-dd HH:mm}";
+            // 确保描述字段始终可见，但显示适当的提示文本
+            if (string.IsNullOrWhiteSpace(_entry.Description))
+            {
+                DescriptionText.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(169, 169, 169));
+            }
+            else
+            {
+                DescriptionText.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(51, 51, 51));
+            }
+
+            DatesText.Text = $"创建时间: {_entry.CreatedAt:yyyy-MM-dd HH:mm}{Environment.NewLine}" +
+                           $"最后更新: {_entry.UpdatedAt:yyyy-MM-dd HH:mm}{Environment.NewLine}" +
+                           $"提醒周期: {_entry.ReminderDays}天";
 
             if (App.ReminderService != null)
             {

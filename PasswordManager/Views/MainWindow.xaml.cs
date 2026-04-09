@@ -104,7 +104,13 @@ namespace PasswordManager.Views
 
                 try
                 {
-                    var success = App.DatabaseService?.UpdatePasswordEntry(entry) ?? false;
+                    if (App.DatabaseService == null)
+                    {
+                        MessageBox.Show("数据库服务未初始化", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var success = App.DatabaseService.UpdatePasswordEntry(entry);
                     if (success)
                     {
                         var index = _allPasswords.FindIndex(p => p.Id == entry.Id);
@@ -114,6 +120,11 @@ namespace PasswordManager.Views
                         }
                         RefreshDataGrid();
                         UpdateStatus($"已更新密码: {entry.Website}");
+                        MessageBox.Show("密码更新成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("密码更新失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
@@ -142,12 +153,24 @@ namespace PasswordManager.Views
             {
                 try
                 {
-                    var success = App.DatabaseService?.DeletePasswordEntry(selectedEntry.Id) ?? false;
+                    if (App.DatabaseService == null)
+                    {
+                        MessageBox.Show("数据库服务未初始化", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var success = App.DatabaseService.DeletePasswordEntry(selectedEntry.Id);
                     if (success)
                     {
                         _allPasswords.Remove(selectedEntry);
                         RefreshDataGrid();
                         UpdateStatus($"已删除密码: {selectedEntry.Website}");
+                        
+                        MessageBox.Show("密码删除成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("密码删除失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
@@ -293,7 +316,7 @@ namespace PasswordManager.Views
             var searchTerm = SearchTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                PasswordsDataGrid.ItemsSource = _allPasswords;
+                PasswordsDataGrid.ItemsSource = new List<PasswordEntry>(_allPasswords);
             }
             else
             {
@@ -304,6 +327,9 @@ namespace PasswordManager.Views
                     .ToList();
                 PasswordsDataGrid.ItemsSource = results;
             }
+            
+            PasswordsDataGrid.Items.Refresh();
+            UpdateStatus($"显示 {PasswordsDataGrid.Items.Count} 个密码条目");
         }
 
         private void RegisterReminderCallback()
